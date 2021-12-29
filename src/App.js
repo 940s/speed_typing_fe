@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import SpeedTest from './SpeedTest.js'
 
