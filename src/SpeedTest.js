@@ -8,7 +8,7 @@ class SpeedTest extends React.Component {
     super(props);
     this.state = {
       WPM: [],
-      testText: 'Please press Start Test below',
+      testText: 'Please select easy or hard difficulty',
       userText: '',
       startTime:0,
       endTime:0,
@@ -35,6 +35,7 @@ class SpeedTest extends React.Component {
   }
 
   getHardText = async () => {
+    document.inputForm.reset();
     try {
       let response = await axios.get(`${process.env.REACT_APP_API}get_text`);
       console.log('app get data: ', response.data)
@@ -104,11 +105,11 @@ class SpeedTest extends React.Component {
       <>
         <header></header>
         <main>
-          <h1>Please enter the following text</h1>
+          <h1>Welcome to the 940s Speed Typing Test</h1>
           <article style={{maxWidth: '48%', margin: '0px auto', fontSize: '20px'}}><TextColor id="testText" text={this.state.testText} userText={this.state.userText}/></article>
-          <form action="/action_page.php">
+          <form action="/action_page.php" name='inputForm'>
             <label for="lname"></label>
-            <input type="text" id="lname" placeholder='Enter text here...' name="lname" size="85" onChange={(event) => this.getResults(event)} />
+            <input type="text" id="lname" autoComplete='off' placeholder='Enter text here...' name="lname" size="85" onChange={(event) => this.getResults(event)} />
           </form>
           <button onClick={this.getEasyText}>Easy Test</button>
           <button onClick={this.getHardText}>Hard Test</button>
