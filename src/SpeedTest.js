@@ -16,21 +16,25 @@ class SpeedTest extends React.Component {
     }
 
   }
-  onUserInputChange = (e) => {
-    const v = e.target.value;
-    this.setTimer();
-    this.onFinish(v)
-    this.setState({
-      userText: v,
-      symbols: this.countCorrectSymbols(v)
-    })
-  }
-  countCorrectSymbols(userText) {
-    const text = this.state.text.replace(' ', '');
-    return userText.replace(' ', '').split('').filter((s,i) => s === text[i]).length;
+
+  getEasyText = async () => {
+    try {
+      let response = await axios.get(`${process.env.REACT_APP_API}get_easy_text`);
+      console.log('app get data: ', response.data)
+      let text = response.data.text;
+
+      this.setState({
+
+        testText: text,
+        startTime: 0,
+        userText: ''
+      });
+    } catch (error) {
+      console.log('this is the get error: ', error.message)
+    }
   }
 
-  getText = async () => {
+  getHardText = async () => {
     try {
       let response = await axios.get(`${process.env.REACT_APP_API}get_text`);
       console.log('app get data: ', response.data)
@@ -39,7 +43,8 @@ class SpeedTest extends React.Component {
       this.setState({
 
         testText: text,
-        startTime: Date.now()
+        startTime: 0,
+        userText: ''
       });
     } catch (error) {
       console.log('this is the get error: ', error.message)
@@ -62,11 +67,18 @@ class SpeedTest extends React.Component {
 
   getResults = async (event) => {
     event.preventDefault();
+    if(this.state.startTime === 0) {
+      this.setState ({
+        startTime: Date.now()
+      })
+    }
     let time = this.getTime()
-
+    this.setState({
+      userText: event.target.value
+    })
     console.log('getResults time: ', time)
     let userText = {
-      original: this.state.testText,
+      original: this.state.testText.substring(0, this.state.userText.length),
       comparison: this.state.userText,
       time: time
     }
@@ -75,7 +87,8 @@ class SpeedTest extends React.Component {
       const userTextResponse = await axios.post(`${process.env.REACT_APP_API}post_wpm`, JSON.stringify(userText));
       this.setState({
         WPM: userTextResponse.data.wpm,
-        accuracy: userTextResponse.data.accuracy
+        accuracy: userTextResponse.data.accuracy,
+        
       })
       console.log(userTextResponse);
 
@@ -94,13 +107,13 @@ class SpeedTest extends React.Component {
           <h1>Please enter the following text</h1>
           <article style={{maxWidth: '48%', margin: '0px auto', fontSize: '20px'}}><TextColor id="testText" text={this.state.testText} userText={this.state.userText}/></article>
           <form action="/action_page.php">
-            <label for="lname">Enter text here:</label>
-            <input type="text" id="lname" name="lname" size="85" onChange={(event) => this.setState({ userText: event.target.value })} />
-            <input type="submit" id="submit" value="Submit" onClick={(event) => this.getResults(event)} />
+            <label for="lname"></label>
+            <input type="text" id="lname" placeholder='Enter text here...' name="lname" size="85" onChange={(event) => this.getResults(event)} />
           </form>
-          <button onClick={this.getText}>Start Test</button>
+          <button onClick={this.getEasyText}>Easy Test</button>
+          <button onClick={this.getHardText}>Hard Test</button>
           <p>WPM: {this.state.WPM}</p>
-          <p>Accuracy: {this.state.accuracy}</p>
+          <p>Accuracy: {this.state.accuracy}%</p>
         </main>
         <footer></footer>
 
