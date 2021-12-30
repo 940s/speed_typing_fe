@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import TextColor from './TextColor';
 
 
 class SpeedTest extends React.Component {
@@ -14,7 +15,19 @@ class SpeedTest extends React.Component {
       accuracy:''
     }
 
-
+  }
+  onUserInputChange = (e) => {
+    const v = e.target.value;
+    this.setTimer();
+    this.onFinish(v)
+    this.setState({
+      userText: v,
+      symbols: this.countCorrectSymbols(v)
+    })
+  }
+  countCorrectSymbols(userText) {
+    const text = this.state.text.replace(' ', '');
+    return userText.replace(' ', '').split('').filter((s,i) => s === text[i]).length;
   }
 
   getText = async () => {
@@ -79,7 +92,7 @@ class SpeedTest extends React.Component {
         <header></header>
         <main>
           <h1>Please enter the following text</h1>
-          <p style={{margin: "0px auto", maxWidth: "75%"}}>{this.state.testText}</p>
+          <article style={{maxWidth: '48%', margin: '0px auto', fontSize: '20px'}}><TextColor id="testText" text={this.state.testText} userText={this.state.userText}/></article>
           <form action="/action_page.php">
             <label for="lname">Enter text here:</label>
             <input type="text" id="lname" name="lname" size="85" onChange={(event) => this.setState({ userText: event.target.value })} />
