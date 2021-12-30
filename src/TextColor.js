@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default (props) => {
+const TextColor = (props) => {
 
   const text = props.text.split('');
 
@@ -18,3 +18,4 @@ export default (props) => {
     </div>
   )
 }
+export default TextColor
