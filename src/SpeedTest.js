@@ -88,11 +88,17 @@ class SpeedTest extends React.Component {
     try {
       const userTextResponse = await axios.post(`${process.env.REACT_APP_API}post_wpm`, JSON.stringify(userText));
       let highScores = userTextResponse.data.hi_scores
+      try {
+        console.log(highScores)
+        console.log('THIS IS THE MESSAGE!!' + JSON.parse(highScores))
+      } catch {
+        console.log('error parsing')
+      }
+      
       this.setState({
         WPM: userTextResponse.data.wpm,
         accuracy: userTextResponse.data.accuracy,
         highScores: highScores
-        
       })
       console.log(userTextResponse);
 
