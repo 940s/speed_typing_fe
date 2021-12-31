@@ -43,3 +43,24 @@ h1 {
     color: salmon;
     padding-top: 3%;
 }
+
+ol {
+    max-width: 20%;
+    margin-left: 42%;
+    background-color: darkgray;
+    color: white;
+    border-radius: 10px;
+}
+li {
+    width: 100%;
+}
+
+button {
+    margin: 0px 2% 5px;
+    border: 2px solid black;
+}
+
+#score {
+    width: 100px;
+    border: 2px solid black;
+}

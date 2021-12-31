@@ -132,14 +132,16 @@ class SpeedTest extends React.Component {
           </form>
           <button onClick={this.getEasyText}>Easy Test</button>
           <button onClick={this.getHardText}>Hard Test</button>
-          <button onClick={this.saveScore}>Save Score</button>
+          <br></br>
+          <button id ='score' onClick={this.saveScore}>Save Score</button>
           <p>WPM: {this.state.WPM}</p>
           <p>Accuracy: {this.state.accuracy}%</p>
           <p>High Scores: </p>
-          {/* {this.state.highScores ?
-          <ol>
-          {this.state.highScores.map(score => <li>score</li>)}
-          </ol> : ''} */}
+          {this.state.highScores ?
+          <ol start='0'>
+            <li>Score:--- WPM: ---Accuracy:</li>
+          {this.state.highScores.map(score => <li>{score.score}--------{score.wpm}--------{score.accuracy}</li>)}
+          </ol> : ''}
         </main>
         <footer></footer>
 
