@@ -12,7 +12,8 @@ class SpeedTest extends React.Component {
       userText: '',
       startTime:0,
       endTime:0,
-      accuracy:''
+      accuracy:'',
+      highScores: ''
     }
 
   }
@@ -86,15 +87,27 @@ class SpeedTest extends React.Component {
     console.log('getResults userText:', userText)
     try {
       const userTextResponse = await axios.post(`${process.env.REACT_APP_API}post_wpm`, JSON.stringify(userText));
+      let highScores = userTextResponse.data.hi_scores
       this.setState({
         WPM: userTextResponse.data.wpm,
         accuracy: userTextResponse.data.accuracy,
+        highScores: highScores
         
       })
       console.log(userTextResponse);
 
     } catch (error) {
       console.log('this is the post error: ', error.message)
+    }
+  }
+
+  saveScore = async () => {
+    let overall = [this.state.WPM, this.state.accuracy]
+    try {
+      let response = await axios.post(`${process.env.REACT_APP_API}post_hi_score`, JSON.stringify(overall));
+      console.log('high score: ', response.data)
+    } catch (error) {
+      console.log('this is the post high score error: ', error.message)
     }
   }
 
@@ -113,8 +126,14 @@ class SpeedTest extends React.Component {
           </form>
           <button onClick={this.getEasyText}>Easy Test</button>
           <button onClick={this.getHardText}>Hard Test</button>
+          <button onClick={this.saveScore}>Save Score</button>
           <p>WPM: {this.state.WPM}</p>
           <p>Accuracy: {this.state.accuracy}%</p>
+          <p>High Scores: </p>
+          {/* {this.state.highScores ?
+          <ol>
+          {this.state.highScores.map(score => <li>score</li>)}
+          </ol> : ''} */}
         </main>
         <footer></footer>
 
