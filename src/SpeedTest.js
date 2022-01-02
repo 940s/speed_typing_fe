@@ -108,10 +108,17 @@ class SpeedTest extends React.Component {
   }
 
   saveScore = async () => {
-    let overall = [this.state.WPM, this.state.accuracy]
+    let overall = {
+      "wpm": this.state.WPM,
+      "accuracy": this.state.accuracy
+    }
+
     try {
       let response = await axios.post(`${process.env.REACT_APP_API}post_hi_score`, JSON.stringify(overall));
       console.log('high score: ', response.data)
+      this.setState({
+        highScores: response.data.hi_scores
+      })
     } catch (error) {
       console.log('this is the post high score error: ', error.message)
     }
